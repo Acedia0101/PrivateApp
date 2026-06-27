@@ -1,5 +1,4 @@
-import { type SchemaTypeDefinition } from 'sanity'
+// src/sanity/schemaTypes/index.ts
+import memoryPage from './memoryPage'; // Removed the curly braces!
 
-export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [],
-}
+export const schemaTypes = [memoryPage];
