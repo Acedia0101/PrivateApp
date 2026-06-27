@@ -27,6 +27,7 @@ export default function Home() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   
   // Book turning state
+  const [isBookOpen, setIsBookOpen] = useState(false);
   const [pages, setPages] = useState<BookPage[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -147,16 +148,51 @@ export default function Home() {
               <p className="text-zinc-300">The book is currently empty.</p>
               <p className="text-xs text-zinc-500 mt-2">Go ahead and add your first page in Sanity Studio!</p>
             </div>
+          ) : !isBookOpen ? (
+            
+            /* DISPLAY THE CLOSED BOOK COVER PAGE */
+            <div 
+              onClick={() => setIsBookOpen(true)}
+              className="w-full max-w-md aspect-[10/13] md:aspect-[10/14] bg-gradient-to-br from-[#3d271d] via-[#2b1e17] to-[#1a120d] rounded-r-2xl p-6 shadow-[10px_20px_50px_rgba(0,0,0,0.9)] border-y-4 border-r-4 border-l-[12px] border-[#231812] flex flex-col justify-between items-center text-center cursor-pointer transform hover:scale-[1.02] hover:rotate-1 transition-all duration-500 group relative overflow-hidden"
+            >
+              {/* Gold Foil Border Accent */}
+              <div className="absolute inset-4 border border-amber-500/20 rounded-md pointer-events-none" />
+              <div className="absolute inset-5 border-2 border-amber-500/10 rounded-sm pointer-events-none" />
+
+              <div className="mt-12 space-y-2 z-10">
+                <span className="text-xs tracking-[0.3em] uppercase text-amber-400/70 font-serif">Our Private Chapter</span>
+                <div className="w-12 h-[1px] bg-amber-500/30 mx-auto my-2" />
+              </div>
+
+              {/* Main Elegant Title */}
+              <div className="z-10 px-4">
+                <h1 className="text-3xl md:text-4xl font-serif font-extrabold tracking-wide text-amber-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  Our Book of Memories
+                </h1>
+                <p className="text-xs italic font-serif text-amber-400/60 mt-4 tracking-widest">
+                  Dedicated to My Princess
+                </p>
+              </div>
+
+              {/* Bottom Cover Accent / Prompt */}
+              <div className="mb-8 z-10 animate-pulse group-hover:text-pink-300 transition-colors">
+                <span className="text-[11px] font-mono tracking-widest text-zinc-400 block uppercase">
+                  Click to Open
+                </span>
+                <span className="text-lg mt-1 block">✨</span>
+              </div>
+            </div>
+
           ) : (
+            
+            /* DISPLAY THE OPENED TWO-PAGE SPREAD BOOK */
             <>
-              {/* THE BOOK WRAPPER */}
               <div className="w-full h-auto min-h-[500px] md:aspect-[16/10] bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative">
                 
-                {/* Subtle Book Center Binding Line (Hidden on mobile stack, visible on desktop layout) */}
+                {/* Subtle Book Center Binding Line */}
                 <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/30 z-30 shadow-[0_0_8px_black]" />
 
                 {/* RESPONSIVE PAGE SPREAD CONTAINER */}
-                {/* Changed from 'grid-cols-2' to a single flex column on mobile that switches to a grid layout on desktop screens */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
                   {/* LEFT PAGE: Photo Layer */}
@@ -201,6 +237,17 @@ export default function Home() {
 
               {/* NAVIGATION CONTROLS */}
               <div className="flex items-center gap-6 mt-6 md:mt-8">
+                {/* Close Book Button */}
+                <button
+                  onClick={() => {
+                    setIsBookOpen(false);
+                    setCurrentPage(0); // Optional: resets back to the first page when closed
+                  }}
+                  className="px-3 py-1.5 rounded-md bg-zinc-800/60 hover:bg-zinc-700 border border-zinc-700 text-zinc-400 hover:text-zinc-200 font-mono text-xs transition-all mr-2"
+                >
+                  📕 Close Book
+                </button>
+
                 <button
                   onClick={prevPage}
                   disabled={currentPage === 0}
