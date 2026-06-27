@@ -1,43 +1,31 @@
-// schemas/memoryPage.ts
-export default {
+// src/sanity/schemaTypes/memoryPage.ts
+import { defineType, defineField } from "sanity";
+
+export default defineType({
   name: 'memoryPage',
   title: 'Memory Book Pages',
-  type: 'document',
+  type: 'document', // <--- TRIPLE CHECK THIS IS EXACTLY 'document'
   fields: [
-    {
+    defineField({
       name: 'pageNumber',
       title: 'Page Number (Order)',
       type: 'number',
-      description: 'The order this page will show up in the book (e.g., 1, 2, 3...)',
-      validation: (Rule: any) => Rule.required().integer().positive(),
-    },
-    {
+    }),
+    defineField({
       name: 'title',
       title: 'Page Title/Heading',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+    }),
+    defineField({
       name: 'letter',
       title: 'Your Letter / Message',
       type: 'text',
-      description: 'Write your heart out here.',
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+    }),
+    defineField({
       name: 'image',
       title: 'Memory Picture',
       type: 'image',
-      options: {
-        hotspot: true, // Allows you to crop perfectly in the studio
-      },
-    },
+      options: { hotspot: true }
+    }),
   ],
-  orderings: [
-    {
-      title: 'Book Order',
-      name: 'pageNumberAsc',
-      by: [{ field: 'pageNumber', direction: 'asc' }],
-    },
-  ],
-}
+});
