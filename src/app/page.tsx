@@ -135,7 +135,7 @@ export default function Home() {
         </div>
       ) : (
         /* INTERACTIVE SKEUOMORPHIC BOOK INTERFACE */
-        <div className="relative z-10 w-full max-w-4xl flex flex-col items-center animate-fadeIn">
+        <div className="relative z-10 w-full max-w-4xl flex flex-col items-center animate-fadeIn px-2 md:px-0">
           
           {loading ? (
             <div className="text-center p-12">
@@ -150,18 +150,19 @@ export default function Home() {
           ) : (
             <>
               {/* THE BOOK WRAPPER */}
-              <div className="w-full aspect-[4/3] md:aspect-[16/9] bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_30px_60px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative">
+              <div className="w-full h-auto min-h-[500px] md:aspect-[16/10] bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative">
                 
-                {/* Subtle Book Center Binding Shadow */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/40 z-30 shadow-[0_0_10px_black]" />
+                {/* Subtle Book Center Binding Line (Hidden on mobile stack, visible on desktop layout) */}
+                <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/30 z-30 shadow-[0_0_8px_black]" />
 
-                {/* TWO-PAGE SPREAD CONTAINER */}
-                <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden grid grid-cols-1 md:grid-cols-2 text-zinc-900 shadow-inner relative">
+                {/* RESPONSIVE PAGE SPREAD CONTAINER */}
+                {/* Changed from 'grid-cols-2' to a single flex column on mobile that switches to a grid layout on desktop screens */}
+                <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
                   {/* LEFT PAGE: Photo Layer */}
-                  <div className="p-6 flex flex-col justify-center items-center border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] h-full">
+                  <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[260px] md:h-full">
                     {pages[currentPage].imageUrl ? (
-                      <div className="w-full h-full max-h-[80%] relative rounded-md overflow-hidden shadow-md border-8 border-white bg-zinc-200">
+                      <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full max-h-[85%] relative rounded-md overflow-hidden shadow-md border-4 md:border-8 border-white bg-zinc-200">
                         <img 
                           src={pages[currentPage].imageUrl} 
                           alt={pages[currentPage].title}
@@ -169,25 +170,27 @@ export default function Home() {
                         />
                       </div>
                     ) : (
-                      <div className="w-full h-full max-h-[80%] border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
+                      <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
                         No image attached to this page
                       </div>
                     )}
-                    <span className="text-xs font-mono mt-4 text-zinc-400">Page {currentPage * 2 + 1}</span>
+                    <span className="text-[10px] font-mono mt-2 md:mt-4 text-zinc-400 self-center md:self-auto">
+                      Page {currentPage * 2 + 1}
+                    </span>
                   </div>
 
                   {/* RIGHT PAGE: Text Letter Layer */}
-                  <div className="p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] h-full relative">
-                    <div className="overflow-y-auto pr-1 max-h-[90%]">
-                      <h2 className="text-2xl font-serif font-bold text-pink-700 mb-4 border-b border-pink-200 pb-2">
+                  <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative">
+                    <div className="overflow-y-auto pr-1 max-h-[220px] md:max-h-[90%]">
+                      <h2 className="text-xl md:text-2xl font-serif font-bold text-pink-700 mb-2 md:mb-4 border-b border-pink-200 pb-2">
                         {pages[currentPage].title}
                       </h2>
-                      <p className="font-serif text-sm md:text-base text-zinc-800 leading-relaxed whitespace-pre-line">
+                      <p className="font-serif text-sm md:text-base text-zinc-800 leading-relaxed whitespace-pre-line tracking-wide">
                         {pages[currentPage].letter}
                       </p>
                     </div>
                     
-                    <div className="flex justify-between items-center mt-4 border-t border-zinc-200 pt-2 text-xs font-mono text-zinc-400">
+                    <div className="flex justify-between items-center mt-4 border-t border-zinc-200 pt-2 text-[10px] font-mono text-zinc-400">
                       <span>✨ Universe M&P</span>
                       <span>Page {currentPage * 2 + 2}</span>
                     </div>
@@ -197,25 +200,25 @@ export default function Home() {
               </div>
 
               {/* NAVIGATION CONTROLS */}
-              <div className="flex items-center gap-6 mt-8">
+              <div className="flex items-center gap-6 mt-6 md:mt-8">
                 <button
                   onClick={prevPage}
                   disabled={currentPage === 0}
-                  className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-pink-500/20 border border-white/10 active:scale-95 disabled:opacity-30 disabled:pointer-events-none font-medium text-sm transition-all shadow-md"
+                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-pink-500/20 border border-white/10 active:scale-95 disabled:opacity-30 disabled:pointer-events-none font-medium text-xs md:text-sm transition-all shadow-md"
                 >
                   ← Back
                 </button>
                 
-                <span className="text-zinc-400 font-mono text-sm">
+                <span className="text-zinc-400 font-mono text-xs md:text-sm">
                   {currentPage + 1} / {pages.length}
                 </span>
 
                 <button
                   onClick={nextPage}
                   disabled={currentPage === pages.length - 1}
-                  className="px-5 py-2.5 rounded-full bg-pink-500/20 hover:bg-pink-500/30 border border-pink-400/30 text-pink-200 active:scale-95 disabled:opacity-30 disabled:pointer-events-none font-medium text-sm transition-all shadow-md"
+                  className="px-4 py-2 rounded-full bg-pink-500/20 hover:bg-pink-500/30 border border-pink-400/30 text-pink-200 active:scale-95 disabled:opacity-30 disabled:pointer-events-none font-medium text-xs md:text-sm transition-all shadow-md"
                 >
-                  Next Page →
+                  Next →
                 </button>
               </div>
             </>
