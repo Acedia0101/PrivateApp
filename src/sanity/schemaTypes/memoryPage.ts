@@ -21,11 +21,13 @@ export default defineType({
       title: 'Your Letter / Message',
       type: 'text',
     }),
+    // Replace your old single image field with this array field:
     defineField({
-      name: 'image',
-      title: 'Memory Picture',
-      type: 'image',
-      options: { hotspot: true }
+      name: 'images',
+      title: 'Memory Pictures',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+      description: 'Upload one or multiple photos for this memory page',
     }),
   ],
 });

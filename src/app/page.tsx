@@ -1,24 +1,23 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { createClient } from "next-sanity";
 
-// Initialize your client (Replace with your actual project details)
+// Initialize your client
 const sanityClient = createClient({
-  projectId: "h9gfx3jy", // Find this in your sanity.config.ts or sanity.cli.ts
+  projectId: "h9gfx3jy", 
   dataset: "production",
   apiVersion: "2026-06-26",
   useCdn: true,
 });
 
+// 1. FIXED: Changed imageUrls to string[] so TypeScript knows it's an array of image links
 interface BookPage {
-  _id: string;
+  _id?: string;
   pageNumber: number;
   title: string;
   letter: string;
-  imageUrl?: string;
+  imageUrls: string[]; 
 }
 
 export default function Home() {
@@ -40,16 +39,19 @@ export default function Home() {
 
     const fetchBookPages = async () => {
       try {
-        // Query fetches the data ordered by your customized pageNumber
         const query = `*[_type == "memoryPage"] | order(pageNumber asc) {
-          _id,
-          pageNumber,
           title,
           letter,
-          "imageUrl": image.asset->url
+          pageNumber,
+          "imageUrls": images[].asset->url
         }`;
         const data = await sanityClient.fetch(query);
-        setPages(data);
+        // Fallback to empty array if data or imageUrls is missing
+        const formattedData = data.map((page: any) => ({
+          ...page,
+          imageUrls: page.imageUrls || []
+        }));
+        setPages(formattedData);
       } catch (error) {
         console.error("Sanity fetch failed:", error);
       } finally {
@@ -93,6 +95,9 @@ export default function Home() {
     top: `${(i * 17) % 100}%`,
     delay: `${(i * 0.3) % 5}s`,
   }));
+
+  // Helper variable for cleaner, safer page reading
+  const activePage = pages[currentPage];
 
   return (
     <main className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center px-4 py-8 bg-gradient-to-b from-[#050816] via-[#090b20] to-black text-white">
@@ -195,34 +200,50 @@ export default function Home() {
                 {/* RESPONSIVE PAGE SPREAD CONTAINER */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
-                  {/* LEFT PAGE: Photo Layer */}
-                  <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[260px] md:h-full">
-                    {pages[currentPage].imageUrl ? (
-                      <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full max-h-[85%] relative rounded-md overflow-hidden shadow-md border-4 md:border-8 border-white bg-zinc-200">
-                        <img 
-                          src={pages[currentPage].imageUrl} 
-                          alt={pages[currentPage].title}
-                          className="w-full h-full object-cover animate-fadeIn"
-                        />
+                  {/* LEFT PAGE: Photo Layer (Supports Multiple Images) */}
+                  <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[280px] md:h-full w-full">
+                    
+                    {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
+                      /* RESPONSIVE PICTURE GRID CONTAINER */
+                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 grid overflow-y-auto p-1
+                        ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[280px] md:max-w-none' : ''}
+                        ${activePage.imageUrls.length === 2 ? 'grid-cols-2' : ''}
+                        ${activePage.imageUrls.length >= 3 ? 'grid-cols-2' : ''}
+                      `}>
+                        {activePage.imageUrls.map((url: string, index: number) => (
+                          <div 
+                            key={index} 
+                            className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 aspect-square
+                              ${activePage.imageUrls.length === 3 && index === 0 ? 'col-span-2 aspect-[16/10]' : ''}
+                            `}
+                          >
+                            <img 
+                              src={url} 
+                              alt={`Memory photo ${index + 1}`}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                        ))}
                       </div>
                     ) : (
                       <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
-                        No image attached to this page
+                        No images attached to this page
                       </div>
                     )}
+                    
                     <span className="text-[10px] font-mono mt-2 md:mt-4 text-zinc-400 self-center md:self-auto">
                       Page {currentPage * 2 + 1}
                     </span>
                   </div>
 
                   {/* RIGHT PAGE: Text Letter Layer */}
-                  <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative">
+                  <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative w-full">
                     <div className="overflow-y-auto pr-1 max-h-[220px] md:max-h-[90%]">
                       <h2 className="text-xl md:text-2xl font-serif font-bold text-pink-700 mb-2 md:mb-4 border-b border-pink-200 pb-2">
-                        {pages[currentPage].title}
+                        {activePage?.title}
                       </h2>
                       <p className="font-serif text-sm md:text-base text-zinc-800 leading-relaxed whitespace-pre-line tracking-wide">
-                        {pages[currentPage].letter}
+                        {activePage?.letter}
                       </p>
                     </div>
                     
@@ -241,7 +262,7 @@ export default function Home() {
                 <button
                   onClick={() => {
                     setIsBookOpen(false);
-                    setCurrentPage(0); // Optional: resets back to the first page when closed
+                    setCurrentPage(0); 
                   }}
                   className="px-3 py-1.5 rounded-md bg-zinc-800/60 hover:bg-zinc-700 border border-zinc-700 text-zinc-400 hover:text-zinc-200 font-mono text-xs transition-all mr-2"
                 >
