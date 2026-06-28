@@ -205,23 +205,19 @@ export default function Home() {
                     
                     {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
                       /* RESPONSIVE PICTURE GRID CONTAINER */
-                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 grid overflow-y-auto p-1
-                        ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[280px] md:max-w-none' : ''}
-                        ${activePage.imageUrls.length === 2 ? 'grid-cols-2' : ''}
-                        ${activePage.imageUrls.length >= 3 ? 'grid-cols-2' : ''}
-                      `}>
+                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 overflow-y-auto p-1
+                          ${activePage.imageUrls.length === 1 ? 'max-w-[280px] md:max-w-none' : 'columns-2'}
+                        `}>
                         {activePage.imageUrls.map((url: string, index: number) => (
                           <div 
                             key={index} 
-                            className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 aspect-square
-                              ${activePage.imageUrls.length === 3 && index === 0 ? 'col-span-2 aspect-[16/10]' : ''}
-                            `}
+                            className="break-inside-avoid mb-2 relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full h-auto"
                           >
                             <img 
-                            src={url} 
-                            alt={`Memory photo ${index + 1}`}
-                            className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300"
-                          />
+                              src={url} 
+                              alt={`Memory photo ${index + 1}`}
+                              className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300"
+                            />
                           </div>
                         ))}
                       </div>
