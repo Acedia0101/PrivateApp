@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "next-sanity";
 
-// Initialize your Sanity client
+// Initialize your client
 const sanityClient = createClient({
   projectId: "h9gfx3jy", 
   dataset: "production",
@@ -11,7 +11,7 @@ const sanityClient = createClient({
   useCdn: true,
 });
 
-// BookPage interface structured as an array of strings for multiple image support
+// 1. FIXED: Changed imageUrls to string[] so TypeScript knows it's an array of image links
 interface BookPage {
   _id?: string;
   pageNumber: number;
@@ -25,7 +25,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   
-  // Book layout states
+  // Book turning state
   const [isBookOpen, setIsBookOpen] = useState(false);
   const [pages, setPages] = useState<BookPage[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -46,8 +46,7 @@ export default function Home() {
           "imageUrls": images[].asset->url
         }`;
         const data = await sanityClient.fetch(query);
-        
-        // Ensure imageUrls defaults to an empty array if undefined
+        // Fallback to empty array if data or imageUrls is missing
         const formattedData = data.map((page: any) => ({
           ...page,
           imageUrls: page.imageUrls || []
@@ -97,25 +96,25 @@ export default function Home() {
     delay: `${(i * 0.3) % 5}s`,
   }));
 
+  // Helper variable for cleaner, safer page reading
   const activePage = pages[currentPage];
 
   return (
     <main className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center px-4 py-8 bg-gradient-to-b from-[#050816] via-[#090b20] to-black text-white">
-      {/* BACKGROUND DECORATIVE ELEMENTS */}
+      {/* BACKGROUND ELEMENTS */}
       <div className="absolute left-1/4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-pink-500/10 blur-3xl pointer-events-none" />
       <div className="absolute right-1/4 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
       <div className="absolute top-12 left-12 opacity-30"><div className="h-16 w-16 rounded-full bg-white shadow-[0_0_40px_white]" /></div>
       
-      {/* STARLIGHT ANIMATION LAYER */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((star) => (
           <span key={star.id} className="star absolute w-[2px] h-[2px] bg-white rounded-full opacity-40" style={{ left: star.left, top: star.top, animation: `pulse 2s infinite`, animationDelay: star.delay }} />
         ))}
       </div>
 
-      {/* --- SITE RENDER LOGIC --- */}
+      {/* --- RENDER LOGIC --- */}
       {!isUnlocked ? (
-        /* 1. PASSCODE ENTRY MODULE */
+        /* PASSCODE ENTRY MODULE */
         <div className="relative z-10 w-full max-w-md">
           <div className="rounded-[32px] border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-2xl">
             <h1 className="text-2xl font-bold text-center mb-2 text-pink-300 drop-shadow-[0_0_20px_rgba(236,72,153,0.6)]">
@@ -141,7 +140,7 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        /* INTERACTIVE MODULE CONTENT */
+        /* INTERACTIVE SKEUOMORPHIC BOOK INTERFACE */
         <div className="relative z-10 w-full max-w-4xl flex flex-col items-center animate-fadeIn px-2 md:px-0">
           
           {loading ? (
@@ -156,12 +155,12 @@ export default function Home() {
             </div>
           ) : !isBookOpen ? (
             
-            /* 2. DISPLAY THE CLOSED BOOK COVER PAGE */
+            /* DISPLAY THE CLOSED BOOK COVER PAGE */
             <div 
               onClick={() => setIsBookOpen(true)}
               className="w-full max-w-md aspect-[10/13] md:aspect-[10/14] bg-gradient-to-br from-[#3d271d] via-[#2b1e17] to-[#1a120d] rounded-r-2xl p-6 shadow-[10px_20px_50px_rgba(0,0,0,0.9)] border-y-4 border-r-4 border-l-[12px] border-[#231812] flex flex-col justify-between items-center text-center cursor-pointer transform hover:scale-[1.02] hover:rotate-1 transition-all duration-500 group relative overflow-hidden"
             >
-              {/* Gold Foil Border Accent lines */}
+              {/* Gold Foil Border Accent */}
               <div className="absolute inset-4 border border-amber-500/20 rounded-md pointer-events-none" />
               <div className="absolute inset-5 border-2 border-amber-500/10 rounded-sm pointer-events-none" />
 
@@ -170,7 +169,7 @@ export default function Home() {
                 <div className="w-12 h-[1px] bg-amber-500/30 mx-auto my-2" />
               </div>
 
-              {/* Cover Title text details */}
+              {/* Main Elegant Title */}
               <div className="z-10 px-4">
                 <h1 className="text-3xl md:text-4xl font-serif font-extrabold tracking-wide text-amber-100 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                   Our Book of Memories
@@ -180,7 +179,7 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Interactive prompt trigger */}
+              {/* Bottom Cover Accent / Prompt */}
               <div className="mb-8 z-10 animate-pulse group-hover:text-pink-300 transition-colors">
                 <span className="text-[11px] font-mono tracking-widest text-zinc-400 block uppercase">
                   Click to Open
@@ -191,37 +190,33 @@ export default function Home() {
 
           ) : (
             
-            /* 3. DISPLAY THE OPENED TWO-PAGE SPREAD BOOK LAYOUT */
+            /* DISPLAY THE OPENED TWO-PAGE SPREAD BOOK */
             <>
               <div className="w-full h-auto min-h-[500px] md:aspect-[16/10] bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative">
                 
-                {/* Book Center Binding Line shadow element */}
+                {/* Subtle Book Center Binding Line */}
                 <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/30 z-30 shadow-[0_0_8px_black]" />
 
-                {/* RESPONSIVE PAGE CONTAINER BLOCK */}
+                {/* RESPONSIVE PAGE SPREAD CONTAINER */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
-                  {/* LEFT PAGE: Photo Layer Gallery Slots */}
+                  {/* LEFT PAGE: Photo Layer (Supports Multiple Images) */}
                   <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[280px] md:h-full w-full">
                     
                     {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                      /* RESPONSIVE UNIFORM PICTURE SQUARE GRID ELEMENTS */
-                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 grid overflow-y-auto p-1
-                        ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[280px] md:max-w-none' : ''}
-                        ${activePage.imageUrls.length === 2 ? 'grid-cols-2' : ''}
-                        ${activePage.imageUrls.length >= 3 ? 'grid-cols-2' : ''}
-                      `}>
+                      /* RESPONSIVE PICTURE GRID CONTAINER */
+                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 overflow-y-auto p-1
+                          ${activePage.imageUrls.length === 1 ? 'max-w-[280px] md:max-w-none' : 'columns-2'}
+                        `}>
                         {activePage.imageUrls.map((url: string, index: number) => (
                           <div 
                             key={index} 
-                            className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 aspect-square
-                              ${activePage.imageUrls.length === 3 && index === 0 ? 'col-span-2 aspect-[16/10]' : ''}
-                            `}
+                            className="break-inside-avoid mb-2 relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full h-auto"
                           >
                             <img 
                               src={url} 
                               alt={`Memory photo ${index + 1}`}
-                              className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300"
+                              className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300"
                             />
                           </div>
                         ))}
@@ -237,7 +232,7 @@ export default function Home() {
                     </span>
                   </div>
 
-                  {/* RIGHT PAGE: Text Letter Layer Content */}
+                  {/* RIGHT PAGE: Text Letter Layer */}
                   <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative w-full">
                     <div className="overflow-y-auto pr-1 max-h-[220px] md:max-h-[90%]">
                       <h2 className="text-xl md:text-2xl font-serif font-bold text-pink-700 mb-2 md:mb-4 border-b border-pink-200 pb-2">
@@ -257,9 +252,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 4. NAVIGATION CONTROLS INTERFACE INTERACTORS */}
+              {/* NAVIGATION CONTROLS */}
               <div className="flex items-center gap-6 mt-6 md:mt-8">
-                {/* Reset interface state toggle back to closed look */}
+                {/* Close Book Button */}
                 <button
                   onClick={() => {
                     setIsBookOpen(false);
