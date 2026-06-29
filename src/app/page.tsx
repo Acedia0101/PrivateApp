@@ -190,79 +190,79 @@ export default function Home() {
 
           ) : (
             
-            /* DISPLAY THE OPENED TWO-PAGE SPREAD BOOK */
-            <>
-              <div className="w-full h-auto min-h-[500px] md:aspect-[16/10] bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative">
+            /* 3. DISPLAY THE OPENED TWO-PAGE SPREAD BOOK LAYOUT */
+          <>
+            {/* Main book frame container wrapper - updated from md:aspect-[16/10] to max-w-5xl h-auto for a robust fit */}
+            <div className="w-full max-w-5xl h-auto bg-[#1e1510] rounded-2xl p-3 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] border-4 border-[#2b1e17] flex justify-center items-center relative my-auto">
+              
+              {/* Book Center Binding Line shadow element */}
+              <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/30 z-30 shadow-[0_0_8px_black]" />
+
+              {/* RESPONSIVE PAGE CONTAINER BLOCK - optimized flex heights to completely stop outer page spillover */}
+              <div className="w-full h-full min-h-[480px] md:min-h-[520px] bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                 
-                {/* Subtle Book Center Binding Line */}
-                <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/30 z-30 shadow-[0_0_8px_black]" />
-
-                {/* RESPONSIVE PAGE SPREAD CONTAINER */}
-                <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
+                {/* LEFT PAGE: Photo Layer (Fixed Top Aligned Scrollable Gallery) */}
+                <div className="p-4 md:p-6 flex flex-col justify-start items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[300px] md:h-[520px] w-full relative overflow-hidden">
                   
-                 {/* LEFT PAGE: Photo Layer (Fixed Top Aligned Scrollable Gallery) */}
-                  <div className="p-4 md:p-6 flex flex-col justify-start items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] h-[450px] md:h-full w-full relative overflow-hidden">
+                  {/* Pictures Scroll Area Container - cleanly bounded height matching the page frame */}
+                  <div className="w-full overflow-y-auto h-[240px] md:h-[430px] pr-1 mt-2 flex flex-col justify-start scrollbar-thin scrollbar-thumb-zinc-300">
                     
-                    {/* Pictures Scroll Area Container */}
-                    <div className="w-full overflow-y-auto max-h-[380px] md:max-h-[88%] pr-1 mt-2 flex flex-col justify-start">
-                      
-                      {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                        /* GRID CONFIGURATION */
-                        <div className={`w-full gap-3 grid p-1
-                          ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[300px] md:max-w-[340px] mx-auto' : 'grid-cols-2'}
-                        `}>
-                          {activePage.imageUrls.map((url: string, index: number) => (
-                            <div 
-                              key={index} 
-                              className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full
-                                ${activePage.imageUrls.length === 1 ? 'aspect-[3/4]' : 'aspect-[4/3] md:aspect-square'}
-                              `}
-                            >
-                              <img 
-                                src={url} 
-                                alt={`Memory photo ${index + 1}`}
-                                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300 block"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm my-auto">
-                          No images attached to this page
-                        </div>
-                      )}
+                    {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
+                      /* GRID CONFIGURATION */
+                      <div className={`w-full gap-3 grid p-1
+                        ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[260px] md:max-w-[320px] mx-auto' : 'grid-cols-2'}
+                      `}>
+                        {activePage.imageUrls.map((url: string, index: number) => (
+                          <div 
+                            key={index} 
+                            className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full
+                              ${activePage.imageUrls.length === 1 ? 'aspect-[3/4]' : 'aspect-square'}
+                            `}
+                          >
+                            <img 
+                              src={url} 
+                              alt={`Memory photo ${index + 1}`}
+                              className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300 block"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="w-full max-w-[280px] md:max-w-none h-48 border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm my-auto">
+                        No images attached to this page
+                      </div>
+                    )}
 
-                    </div>
-
-                    {/* Page number pinned neatly at the bottom edge */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none bg-gradient-to-t from-[#fdfaf2] via-[#fdfaf2] to-transparent pt-2 pb-1">
-                      <span className="text-[10px] font-mono text-zinc-400">
-                        Page {currentPage * 2 + 1}
-                      </span>
-                    </div>
-                  </div>
-                                                          
-  
-
-                  {/* RIGHT PAGE: Text Letter Layer */}
-                  <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative w-full">
-                    <div className="overflow-y-auto pr-1 max-h-[220px] md:max-h-[90%]">
-                      <h2 className="text-xl md:text-2xl font-serif font-bold text-pink-700 mb-2 md:mb-4 border-b border-pink-200 pb-2">
-                        {activePage?.title}
-                      </h2>
-                      <p className="font-serif text-sm md:text-base text-zinc-800 leading-relaxed whitespace-pre-line tracking-wide">
-                        {activePage?.letter}
-                      </p>
-                    </div>
-                    
-                    <div className="flex justify-between items-center mt-4 border-t border-zinc-200 pt-2 text-[10px] font-mono text-zinc-400">
-                      <span>✨ Universe M&P</span>
-                      <span>Page {currentPage * 2 + 2}</span>
-                    </div>
                   </div>
 
+                  {/* Page number pinned neatly at the bottom edge */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none bg-[#fdfaf2]/90 pt-1">
+                    <span className="text-[10px] font-mono text-zinc-400">
+                      Page {currentPage * 2 + 1}
+                    </span>
+                  </div>
                 </div>
+
+                {/* RIGHT PAGE: Text Letter Layer Content */}
+                <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] min-h-[250px] md:h-[520px] relative w-full overflow-hidden">
+                  {/* Letter content wrapper - matching heights exactly to align the right side scrollbar bounds */}
+                  <div className="overflow-y-auto pr-1 h-[200px] md:h-[430px] scrollbar-thin scrollbar-thumb-zinc-300">
+                    <h2 className="text-xl md:text-2xl font-serif font-bold text-pink-700 mb-2 border-b border-pink-200 pb-2">
+                      {activePage?.title}
+                    </h2>
+                    <p className="font-serif text-sm md:text-base text-zinc-800 leading-relaxed whitespace-pre-line tracking-wide">
+                      {activePage?.letter}
+                    </p>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mt-2 border-t border-zinc-200 pt-2 text-[10px] font-mono text-zinc-400">
+                    <span>✨ Universe M&P</span>
+                    <span>Page {currentPage * 2 + 2}</span>
+                  </div>
+                </div>
+
               </div>
+            </div>
 
               {/* NAVIGATION CONTROLS */}
               <div className="flex items-center gap-6 mt-6 md:mt-8">
