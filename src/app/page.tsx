@@ -200,37 +200,44 @@ export default function Home() {
                 {/* RESPONSIVE PAGE SPREAD CONTAINER */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
-                  {/* LEFT PAGE: Photo Layer (Supports Multiple Images) */}
-                  <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[280px] md:h-full w-full">
+                  {/* LEFT PAGE: Photo Layer (Fixed Layout) */}
+                  <div className="p-4 md:p-6 flex flex-col justify-center items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[280px] md:h-full w-full relative overflow-hidden">
                     
-                    {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                      /* RESPONSIVE PICTURE GRID CONTAINER */
-                      <div className={`w-full max-h-[380px] md:max-h-[85%] gap-2 overflow-y-auto p-1
-                          ${activePage.imageUrls.length === 1 ? 'max-w-[280px] md:max-w-none' : 'columns-2'}
+                    {/* Inner wrapper that strictly locks height boundaries and centers content */}
+                    <div className="w-full h-full max-h-[380px] md:max-h-[85%] flex items-center justify-center">
+                      
+                      {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
+                        /* RESPONSIVE PICTURE GRID CONTAINER */
+                        <div className={`w-full gap-2 grid overflow-y-auto p-1 max-h-full
+                          ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[280px] md:max-w-none' : 'grid-cols-2'}
                         `}>
-                        {activePage.imageUrls.map((url: string, index: number) => (
-                          <div 
-                            key={index} 
-                            className="break-inside-avoid mb-2 relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full h-auto"
-                          >
-                            <img 
-                              src={url} 
-                              alt={`Memory photo ${index + 1}`}
-                              className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
-                        No images attached to this page
-                      </div>
-                    )}
-                    
+                          {activePage.imageUrls.map((url: string, index: number) => (
+                            <div 
+                              key={index} 
+                              className="relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full"
+                            >
+                              <img 
+                                src={url} 
+                                alt={`Memory photo ${index + 1}`}
+                                className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300 block"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
+                          No images attached to this page
+                        </div>
+                      )}
+
+                    </div>
+
                     <span className="text-[10px] font-mono mt-2 md:mt-4 text-zinc-400 self-center md:self-auto">
                       Page {currentPage * 2 + 1}
                     </span>
                   </div>
+                    
+  
 
                   {/* RIGHT PAGE: Text Letter Layer */}
                   <div className="p-5 md:p-6 flex flex-col justify-between bg-gradient-to-l from-[#f5f1e6] to-[#fdfaf2] flex-1 md:h-full relative w-full">
