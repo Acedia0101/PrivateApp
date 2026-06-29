@@ -201,43 +201,47 @@ export default function Home() {
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
                  {/* LEFT PAGE: Photo Layer (Fixed Top Aligned Scrollable Gallery) */}
-                    <div className="p-4 md:p-6 flex flex-col justify-between items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[320px] md:h-full w-full relative">
+                  <div className="p-4 md:p-6 flex flex-col justify-start items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] h-[450px] md:h-full w-full relative overflow-hidden">
+                    
+                    {/* Pictures Scroll Area Container */}
+                    <div className="w-full overflow-y-auto max-h-[380px] md:max-h-[88%] pr-1 mt-2 flex flex-col justify-start">
                       
-                      {/* Top-aligned container wrapper */}
-                      <div className="w-full flex flex-col justify-start items-center flex-1 overflow-hidden mt-2">
-                        
-                        {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                          /* RESPONSIVE PICTURE GRID CONTAINER WITH SMOOTH SCROLL */
-                          <div className={`w-full gap-3 grid p-1 max-h-[280px] md:max-h-[390px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300
-                            ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[300px] md:max-w-[340px]' : 'grid-cols-2'}
-                          `}>
-                            {activePage.imageUrls.map((url: string, index: number) => (
-                              <div 
-                                key={index} 
-                                className="relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full h-auto"
-                              >
-                                <img 
-                                  src={url} 
-                                  alt={`Memory photo ${index + 1}`}
-                                  className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300 block"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm">
-                            No images attached to this page
-                          </div>
-                        )}
+                      {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
+                        /* GRID CONFIGURATION */
+                        <div className={`w-full gap-3 grid p-1
+                          ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[300px] md:max-w-[340px] mx-auto' : 'grid-cols-2'}
+                        `}>
+                          {activePage.imageUrls.map((url: string, index: number) => (
+                            <div 
+                              key={index} 
+                              className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full
+                                ${activePage.imageUrls.length === 1 ? 'aspect-[3/4]' : 'aspect-[4/3] md:aspect-square'}
+                              `}
+                            >
+                              <img 
+                                src={url} 
+                                alt={`Memory photo ${index + 1}`}
+                                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300 block"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="w-full max-w-[280px] md:max-w-none h-48 md:h-full border-2 border-dashed border-zinc-300 rounded-md flex items-center justify-center text-zinc-400 italic text-sm my-auto">
+                          No images attached to this page
+                        </div>
+                      )}
 
-                      </div>
+                    </div>
 
-                      {/* Page number locked tightly at the bottom bounds */}
-                      <span className="text-[10px] font-mono mt-4 text-zinc-400 self-center">
+                    {/* Page number pinned neatly at the bottom edge */}
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none bg-gradient-to-t from-[#fdfaf2] via-[#fdfaf2] to-transparent pt-2 pb-1">
+                      <span className="text-[10px] font-mono text-zinc-400">
                         Page {currentPage * 2 + 1}
                       </span>
                     </div>
-                                        
+                  </div>
+                                                          
   
 
                   {/* RIGHT PAGE: Text Letter Layer */}
