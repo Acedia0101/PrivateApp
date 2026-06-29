@@ -200,26 +200,26 @@ export default function Home() {
                 {/* RESPONSIVE PAGE SPREAD CONTAINER */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
-                  {/* LEFT PAGE: Photo Layer (Top Aligned with Internal Scrolling) */}
+                 {/* LEFT PAGE: Photo Layer (Fixed Top Aligned Scrollable Gallery) */}
                     <div className="p-4 md:p-6 flex flex-col justify-between items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[320px] md:h-full w-full relative">
                       
                       {/* Top-aligned container wrapper */}
                       <div className="w-full flex flex-col justify-start items-center flex-1 overflow-hidden mt-2">
                         
                         {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                          /* RESPONSIVE PICTURE GRID CONTAINER WITH SCROLLBAR */
-                          <div className={`w-full gap-3 grid p-1 max-h-[260px] md:max-h-[380px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300
+                          /* RESPONSIVE PICTURE GRID CONTAINER WITH SMOOTH SCROLL */
+                          <div className={`w-full gap-3 grid p-1 max-h-[280px] md:max-h-[390px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300
                             ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[300px] md:max-w-[340px]' : 'grid-cols-2'}
                           `}>
                             {activePage.imageUrls.map((url: string, index: number) => (
                               <div 
                                 key={index} 
-                                className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full aspect-square`}
+                                className="relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full h-auto"
                               >
                                 <img 
                                   src={url} 
                                   alt={`Memory photo ${index + 1}`}
-                                  className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-300 block"
+                                  className="w-full h-auto object-contain hover:scale-105 transition-transform duration-300 block"
                                 />
                               </div>
                             ))}
