@@ -200,23 +200,21 @@ export default function Home() {
                 {/* RESPONSIVE PAGE SPREAD CONTAINER */}
                 <div className="w-full h-full bg-[#fdfaf2] rounded-lg overflow-hidden flex flex-col md:grid md:grid-cols-2 text-zinc-900 shadow-inner relative">
                   
-                  {/* LEFT PAGE: Photo Layer (Fixed Layout) */}
-                    <div className="p-4 md:p-6 flex flex-col justify-between items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[280px] md:h-full w-full relative">
+                  {/* LEFT PAGE: Photo Layer (Top Aligned with Internal Scrolling) */}
+                    <div className="p-4 md:p-6 flex flex-col justify-between items-center border-b md:border-b-0 md:border-r border-zinc-300/60 bg-gradient-to-r from-[#f5f1e6] to-[#fdfaf2] min-h-[320px] md:h-full w-full relative">
                       
-                      {/* Inner wrapper that perfectly centers content vertically inside the page space */}
-                      <div className="w-full my-auto flex items-center justify-center">
+                      {/* Top-aligned container wrapper */}
+                      <div className="w-full flex flex-col justify-start items-center flex-1 overflow-hidden mt-2">
                         
                         {activePage?.imageUrls && activePage.imageUrls.length > 0 ? (
-                          /* RESPONSIVE PICTURE GRID CONTAINER */
-                          <div className={`w-full gap-3 grid overflow-y-auto p-1 max-h-[340px] md:max-h-[400px]
+                          /* RESPONSIVE PICTURE GRID CONTAINER WITH SCROLLBAR */
+                          <div className={`w-full gap-3 grid p-1 max-h-[260px] md:max-h-[380px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300
                             ${activePage.imageUrls.length === 1 ? 'grid-cols-1 max-w-[300px] md:max-w-[340px]' : 'grid-cols-2'}
                           `}>
                             {activePage.imageUrls.map((url: string, index: number) => (
                               <div 
                                 key={index} 
-                                className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full
-                                  ${activePage.imageUrls.length === 1 ? 'aspect-[4/3] md:aspect-[3/4]' : 'aspect-square'}
-                                `}
+                                className={`relative rounded-md overflow-hidden shadow-md border-2 md:border-4 border-white bg-zinc-200 w-full aspect-square`}
                               >
                                 <img 
                                   src={url} 
@@ -234,7 +232,8 @@ export default function Home() {
 
                       </div>
 
-                      <span className="text-[10px] font-mono mt-2 text-zinc-400 self-center">
+                      {/* Page number locked tightly at the bottom bounds */}
+                      <span className="text-[10px] font-mono mt-4 text-zinc-400 self-center">
                         Page {currentPage * 2 + 1}
                       </span>
                     </div>
